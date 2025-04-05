@@ -12,6 +12,9 @@ import { loginSchema, LoginFormData } from "@/lib/validations/auth.schema";
 import { useLogin } from "@/hooks/useAuthActions";
 import ErrorInfo from "./ErrorInfo";
 
+/**
+ * Login form with built-in validation and error handling
+ */
 export default function LoginForm() {
   const {
     register,
