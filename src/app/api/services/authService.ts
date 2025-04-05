@@ -1,15 +1,5 @@
 import api from "../apiConfig";
-import { LoginDTO, SignupDTO } from "@/types/auth";
-
-type AuthResponse = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-  };
-  token: string;
-};
+import { AuthResponse, LoginDTO, SignupDTO } from "@/types/auth";
 
 class AuthService {
   login(credentials: LoginDTO) {

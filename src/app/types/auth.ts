@@ -8,3 +8,13 @@ export type SignupDTO = {
   email: string;
   password: string;
 };
+
+export type AuthResponse = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+  token: string;
+};

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { isAdminUser } from "@/utils/auth";
+import { authStorage } from "@/utils/authStorage";
+import { AUTH_EVENT_KEY } from "@/constants/storage";
 
 type User = {
   id: string;
@@ -11,18 +13,14 @@ type User = {
 export default function useAuth() {
   const [user, setUser] = useState<User | null>(null);
 
-  const syncAuth = () => {
-    const storedUser = localStorage.getItem("user");
-    setUser(storedUser ? JSON.parse(storedUser) : null);
-  };
+  const syncAuth = () => setUser(authStorage.getUser());
 
   useEffect(() => {
     syncAuth();
-
-    window.addEventListener("auth-change", syncAuth);
+    window.addEventListener(AUTH_EVENT_KEY, syncAuth);
 
     return () => {
-      window.removeEventListener("auth-change", syncAuth);
+      window.removeEventListener(AUTH_EVENT_KEY, syncAuth);
     };
   }, []);
 
