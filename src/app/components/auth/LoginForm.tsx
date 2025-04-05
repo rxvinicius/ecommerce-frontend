@@ -1,24 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/icons";
-import authService from "@/api/services/authService";
 import { loginSchema, LoginFormData } from "@/lib/validations/auth.schema";
+import { useLogin } from "@/hooks/useAuthActions";
+import ErrorInfo from "./ErrorInfo";
 
 export default function LoginForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -26,28 +20,9 @@ export default function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+  const { mutate: login, isPending: isLoading, isError, error } = useLogin();
 
-  const onSubmit = async (data: LoginFormData) => {
-    if (isLoading) return;
-    setIsLoading(true);
-    setError(null);
-
-    authService
-      .login(data)
-      .then((response) => {
-        const { user, token } = response.data;
-        router.push(user.role === "ADMIN" ? "/admin" : "/");
-      })
-      .catch((err) => {
-        const { data } = err.response;
-        setError(
-          data.error === "Unauthorized"
-            ? "Email ou senha inválidos."
-            : "Ocorreu um erro"
-        );
-      })
-      .finally(() => setIsLoading(false));
-  };
+  const onSubmit = (data: LoginFormData) => login(data);
 
   return (
     <div className="grid gap-6">
@@ -81,18 +56,10 @@ export default function LoginForm() {
             )}
           </div>
 
-          {error && (
-            <Alert variant="destructive" className="flex justify-center">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+          {isError && <ErrorInfo error={error} context="login" />}
 
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? (
-              <Spinner className="h-4 w-4 animate-spin" />
-            ) : (
-              "Entrar"
-            )}
+            {isLoading ? <Spinner className="animate-spin" /> : "Entrar"}
           </Button>
 
           <p className="text-dark-1 text-center mt-2">

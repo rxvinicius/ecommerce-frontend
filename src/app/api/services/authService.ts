@@ -1,18 +1,23 @@
 import api from "../apiConfig";
+import { LoginDTO, SignupDTO } from "@/types/auth";
+
+type AuthResponse = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+  token: string;
+};
 
 class AuthService {
-  private api;
-
-  constructor() {
-    this.api = api;
+  login(credentials: LoginDTO) {
+    return api.post<AuthResponse>("/auth/login", credentials);
   }
 
-  login(credentials: { email: string; password: string }) {
-    return this.api.post("/auth/login", credentials);
-  }
-
-  signup(credentials: { email: string; name: string; password: string }) {
-    return this.api.post("/auth/signup", credentials);
+  signup(credentials: SignupDTO) {
+    return api.post<AuthResponse>("/auth/signup", credentials);
   }
 }
 

@@ -124,6 +124,18 @@
     @apply flex justify-center items-center;
   }
 
+  .header-icon {
+    @apply h-5 w-5;
+  }
+
+  .dropdown-menu-item {
+    @apply flex items-center gap-2 p-2 rounded cursor-pointer;
+  }
+
+  .icon {
+    @apply h-4 w-4;
+  }
+
   .base-regular {
     @apply text-[16px] font-normal leading-[180%];
   }

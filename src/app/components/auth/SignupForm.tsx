@@ -1,24 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/icons";
-import authService from "@/api/services/authService";
-import Link from "next/link";
 import { SignUpFormData, signUpSchema } from "@/lib/validations/auth.schema";
+import { useSignUp } from "@/hooks/useAuthActions";
+import ErrorInfo from "./ErrorInfo";
 
 export default function SignUpForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -26,27 +20,9 @@ export default function SignUpForm() {
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
   });
+  const { mutate: signUp, isPending: isLoading, isError, error } = useSignUp();
 
-  const onSubmit = async (data: SignUpFormData) => {
-    if (isLoading) return;
-    setIsLoading(true);
-    setError(null);
-
-    authService
-      .signup(data)
-      .then((response) => {
-        const { user, token } = response.data;
-        router.push("/");
-      })
-      .catch((err) => {
-        const { data } = err.response;
-        console.log(data);
-        setError(
-          data.error === "Conflict" ? "Email já cadastrado." : "Ocorreu um erro"
-        );
-      })
-      .finally(() => setIsLoading(false));
-  };
+  const onSubmit = async (data: SignUpFormData) => signUp(data);
 
   return (
     <div className="grid gap-6">
@@ -57,6 +33,7 @@ export default function SignUpForm() {
             <Input
               id="name"
               type="text"
+              autoComplete="off"
               placeholder="Seu nome completo"
               {...register("name")}
               disabled={isLoading}
@@ -71,6 +48,7 @@ export default function SignUpForm() {
             <Input
               id="email"
               type="email"
+              autoComplete="off"
               placeholder="seu@email.com"
               {...register("email")}
               disabled={isLoading}
@@ -85,6 +63,7 @@ export default function SignUpForm() {
             <Input
               id="password"
               type="password"
+              autoComplete="new-password"
               placeholder="••••••"
               {...register("password")}
               disabled={isLoading}
@@ -94,23 +73,15 @@ export default function SignUpForm() {
             )}
           </div>
 
-          {error && (
-            <Alert variant="destructive" className="flex justify-center">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+          {isError && <ErrorInfo error={error} context="signup" />}
 
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? (
-              <Spinner className="h-4 w-4 animate-spin" />
-            ) : (
-              "Entrar"
-            )}
+            {isLoading ? <Spinner className="animate-spin" /> : "Cadastrar"}
           </Button>
 
           <p className="text-dark-1 text-center mt-2">
             Tem uma conta?&nbsp;
-            <Link href="/sign-up" className="text-primary font-semibold">
+            <Link href="/login" className="text-primary font-semibold">
               Conecte-se
             </Link>
           </p>

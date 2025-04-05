@@ -1,25 +1,70 @@
+"use client";
+
 import Link from "next/link";
+// import { SearchInput } from "@/components/ui/search-input"
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, User, PackagePlus } from "@/components/ui/icons";
+import useAuth from "@/hooks/useAuth";
+import { Input } from "../ui/input";
+import ProfileDropdown from "./ProfileDropdown";
 
-const Header = () => (
-  <header className="bg-white shadow-sm">
-    <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-      <Link href="/" className="text-2xl font-bold text-primary">
-        Waving Store
-      </Link>
+export default function Header() {
+  const { isAdmin, isAuthenticated } = useAuth();
 
-      <nav className="flex items-center space-x-6 text-gray-700">
-        <Link href="/products" className="hover:text-primary">
-          Produtos
-        </Link>
-        <Link href="/cart" className="hover:text-primary">
-          Carrinho
-        </Link>
-        <Link href="/login" className="hover:text-primary">
-          Login
-        </Link>
-      </nav>
-    </div>
-  </header>
-);
+  return (
+    <header className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            href="/"
+            className="text-xl font-bold text-primary whitespace-nowrap"
+          >
+            Waving Store
+          </Link>
 
-export default Header;
+          {/* Seach bar (web) */}
+          <div className="hidden md:flex flex-1 max-w-md mx-4">
+            <Input placeholder="Buscar produtos..." />
+          </div>
+
+          {/* Action icons */}
+          <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/admin/products/new">
+                  <PackagePlus className="header-icon" />
+                  <span className="sr-only">Adicionar produto</span>
+                </Link>
+              </Button>
+            )}
+
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/cart">
+                <ShoppingCart className="header-icon" />
+                <span className="sr-only">Carrinho</span>
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="icon" asChild>
+              {isAuthenticated ? (
+                <div className="flex items-center gap-2">
+                  <ProfileDropdown />
+                </div>
+              ) : (
+                <Link href={isAdmin ? "/admin" : "/login"}>
+                  <User className="header-icon" />
+                  <span className="sr-only">Perfil</span>
+                </Link>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Seach bar (mobile) */}
+        <div className="mt-3 md:hidden">
+          <Input placeholder="Buscar..." />
+        </div>
+      </div>
+    </header>
+  );
+}
