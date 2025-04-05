@@ -120,6 +120,10 @@
 }
 
 @layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
   .base-regular {
     @apply text-[16px] font-normal leading-[180%];
   }

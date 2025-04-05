@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,10 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/icons";
 import authService from "@/api/services/authService";
-import { loginSchema, LoginFormData } from "@/lib/validations/auth.schema";
+import Link from "next/link";
+import { SignUpFormData, signUpSchema } from "@/lib/validations/auth.schema";
 
-export default function LoginForm() {
+export default function SignUpForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,27 +23,26 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: SignUpFormData) => {
     if (isLoading) return;
     setIsLoading(true);
     setError(null);
 
     authService
-      .login(data)
+      .signup(data)
       .then((response) => {
         const { user, token } = response.data;
-        router.push(user.role === "ADMIN" ? "/admin" : "/");
+        router.push("/");
       })
       .catch((err) => {
         const { data } = err.response;
+        console.log(data);
         setError(
-          data.error === "Unauthorized"
-            ? "Email ou senha inválidos."
-            : "Ocorreu um erro"
+          data.error === "Conflict" ? "Email já cadastrado." : "Ocorreu um erro"
         );
       })
       .finally(() => setIsLoading(false));
@@ -53,6 +52,20 @@ export default function LoginForm() {
     <div className="grid gap-6">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="name">Nome</Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Seu nome completo"
+              {...register("name")}
+              disabled={isLoading}
+            />
+            {errors.name && (
+              <p className="small-medium error">{errors.name.message}</p>
+            )}
+          </div>
+
           <div className="grid gap-2">
             <Label htmlFor="email">E-mail</Label>
             <Input
@@ -96,9 +109,9 @@ export default function LoginForm() {
           </Button>
 
           <p className="text-dark-1 text-center mt-2">
-            Não tem uma conta?&nbsp;
+            Tem uma conta?&nbsp;
             <Link href="/sign-up" className="text-primary font-semibold">
-              Cadastre-se
+              Conecte-se
             </Link>
           </p>
         </div>

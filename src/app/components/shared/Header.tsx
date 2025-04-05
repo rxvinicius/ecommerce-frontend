@@ -7,14 +7,14 @@ const Header = () => (
         Waving Store
       </Link>
 
-      <nav className="flex items-center space-x-6">
-        <Link href="/products" className="text-gray-700 hover:text-primary">
+      <nav className="flex items-center space-x-6 text-gray-700">
+        <Link href="/products" className="hover:text-primary">
           Produtos
         </Link>
-        <Link href="/cart" className="text-gray-700 hover:text-primary">
+        <Link href="/cart" className="hover:text-primary">
           Carrinho
         </Link>
-        <Link href="/login" className="text-gray-700 hover:text-primary">
+        <Link href="/login" className="hover:text-primary">
           Login
         </Link>
       </nav>
