@@ -9,7 +9,15 @@ import {
   User,
   Settings,
   ShoppingCart,
+  Package,
   PackagePlus,
+  PackageSearch,
+  Edit,
+  Trash,
+  ImagePlus,
+  X,
+  Check,
+  AlertTriangle,
 } from "lucide-react";
 
 export {
@@ -23,5 +31,13 @@ export {
   User,
   Settings,
   ShoppingCart,
+  Package,
   PackagePlus,
+  PackageSearch,
+  Edit,
+  Trash,
+  ImagePlus,
+  X,
+  Check,
+  AlertTriangle,
 };

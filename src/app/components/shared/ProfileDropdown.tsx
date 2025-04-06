@@ -32,11 +32,13 @@ export default function ProfileDropdown() {
         align="end"
         className="w-56 bg-white shadow-lg rounded-md p-1 border border-gray-100"
       >
+        {/* TODO: Add my profile feature */}
         <DropdownMenuItem className="dropdown-menu-item hover:bg-gray-50">
           <User className="icon text-gray-600" />
           <span>Meu Perfil</span>
         </DropdownMenuItem>
 
+        {/* TODO: Add admin panel */}
         {isAdmin && (
           <DropdownMenuItem className="dropdown-menu-item hover:bg-gray-50">
             <Settings className="icon text-gray-600" />

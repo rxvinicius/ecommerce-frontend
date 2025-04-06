@@ -29,21 +29,21 @@ export default function Header() {
 
           {/* Action icons */}
           <div className="flex items-center gap-2">
-            {isAdmin && (
+            {isAdmin ? (
               <Button variant="ghost" size="icon" asChild>
                 <Link href="/admin/products/new">
                   <PackagePlus className="header-icon" />
                   <span className="sr-only">Adicionar produto</span>
                 </Link>
               </Button>
+            ) : (
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/cart">
+                  <ShoppingCart className="header-icon" />
+                  <span className="sr-only">Carrinho</span>
+                </Link>
+              </Button>
             )}
-
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="/cart">
-                <ShoppingCart className="header-icon" />
-                <span className="sr-only">Carrinho</span>
-              </Link>
-            </Button>
 
             <Button variant="ghost" size="icon" asChild>
               {isAuthenticated ? (
