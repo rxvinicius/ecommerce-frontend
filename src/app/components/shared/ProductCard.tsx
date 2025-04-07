@@ -26,31 +26,33 @@ export default function ProductCard({
   if (!authLoaded) return null;
 
   return (
-    <div
-      className="w-full max-w-sm border rounded-xl p-4 flex flex-col gap-2 shadow-sm cursor-pointer"
-      onClick={() => router.push(`/products/${product.id}`)}
-    >
-      <img
-        src={product.images[0]}
-        alt={product.name}
-        className="w-full h-48 object-cover rounded-lg"
-      />
+    <div className="group w-full max-w-sm border rounded-xl p-4 flex flex-col gap-2 shadow-sm transition hover:shadow-md bg-white dark:bg-zinc-900 cursor-pointer">
+      <div
+        className="relative w-full h-48 overflow-hidden rounded-lg"
+        onClick={() => router.push(`/products/${product.id}`)}
+      >
+        <img
+          src={product.images[0]}
+          alt={product.name}
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
 
-      <h3 className="font-semibold text-lg mt-2 truncate">{product.name}</h3>
-      <p className="text-muted-foreground text-sm truncate">
-        {product.description}
-      </p>
+      <div className="mt-2 space-y-1">
+        <h3 className="font-semibold text-lg truncate">{product.name}</h3>
+        <p className="text-muted-foreground text-sm truncate">
+          {product.description}
+        </p>
+        <p className="text-primary font-bold text-xl">
+          R$ {product.price.toFixed(2)}
+        </p>
+      </div>
 
-      <p className="text-primary font-bold text-lg mt-1">
-        R$ {product.price.toFixed(2)}
-      </p>
-
-      <div className="flex gap-2 mt-auto">
-        {isAdmin ? (
-          <div className="flex flex-row justify-between w-full">
+      <div className="flex gap-2 mt-auto opacity-0 group-hover:opacity-100 transition-opacity">
+        {isAdmin && (
+          <div className="flex flex-row w-full justify-between">
             <Button
               variant="outline"
-              size="sm"
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit?.();
@@ -59,10 +61,8 @@ export default function ProductCard({
               <Edit className="h-4 w-4" />
               Editar
             </Button>
-
             <Button
               variant="destructive"
-              size="sm"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete?.();
@@ -72,17 +72,6 @@ export default function ProductCard({
               Excluir
             </Button>
           </div>
-        ) : (
-          <Button
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart?.();
-            }}
-          >
-            <ShoppingCart className="h-4 w-4" />
-            Adicionar ao carrinho
-          </Button>
         )}
       </div>
     </div>
