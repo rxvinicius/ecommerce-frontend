@@ -1,8 +1,11 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
 import productService from "@/api/services/productService";
 import { GetProductsParams, PaginatedProductResponse } from "@/types/product";
+import type { ApiError } from "@/types/api";
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
@@ -12,8 +15,7 @@ export const useCreateProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
-    onError: (err: any) => {
-      console.log(err);
+    onError: (err: AxiosError<ApiError>) => {
       throw new Error(
         err?.response?.data?.message ||
           "Erro ao criar produto. Tente novamente mais tarde."

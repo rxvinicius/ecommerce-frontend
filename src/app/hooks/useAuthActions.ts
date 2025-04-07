@@ -2,8 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
 import authService from "@/api/services/authService";
 import { AuthResponse, LoginDTO, SignupDTO } from "@/types/auth";
+import { ApiError } from "@/types/api";
 import { isAdminUser } from "@/utils/auth";
 import { authStorage } from "@/utils/authStorage";
 
@@ -21,7 +24,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginDTO) => authService.login(data),
     onSuccess: ({ data }) => handleAuthSuccess(data, router),
-    onError: (err: any) => {
+    onError: (err: AxiosError<ApiError>) => {
       throw new Error(
         err?.response?.data?.error === "Unauthorized"
           ? "Email ou senha inválidos."
@@ -37,7 +40,7 @@ export const useSignUp = () => {
   return useMutation({
     mutationFn: (data: SignupDTO) => authService.signup(data),
     onSuccess: ({ data }) => handleAuthSuccess(data, router),
-    onError: (err: any) => {
+    onError: (err: AxiosError<ApiError>) => {
       const errorMessage =
         err?.response?.data?.error === "Conflict"
           ? "E-mail já cadastrado"

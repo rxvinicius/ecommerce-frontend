@@ -14,12 +14,10 @@ export default function useNumericInput({
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      let val = e.target.value;
+      const val = e.target.value;
 
-      // Permite apenas números, vírgula e ponto
       if (!/^[0-9]*[.,]?[0-9]{0,2}$/.test(val)) return;
 
-      // Substitui vírgula por ponto para validação numérica
       const numeric = parseFloat(val.replace(",", "."));
 
       if (val === "" || isNaN(numeric)) {

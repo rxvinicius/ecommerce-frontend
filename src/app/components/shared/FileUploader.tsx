@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { ImagePlus, Spinner, X, Check } from "@/components/ui/icons";
@@ -126,11 +127,12 @@ export default function FileUploader({
           {previews.map((src, i) => (
             <div
               key={i}
-              className="relative border border-input rounded overflow-hidden"
+              className="relative w-full h-32 border border-input rounded overflow-hidden"
             >
-              <img
+              <Image
                 src={src}
                 alt={`preview-${i}`}
+                fill
                 className="object-contain h-32 w-full"
               />
               <button

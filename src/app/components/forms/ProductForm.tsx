@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/icons";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/shared/FileUploader";
-// TODO: Add error info
+// TODO: add error handling
 // import ErrorInfo from "../auth/ErrorInfo";
 import { ProductFormProps } from "@/types/product";
 
@@ -43,8 +43,9 @@ export default function ProductForm({ action, product }: ProductFormProps) {
   const {
     mutate: createProduct,
     isPending: isLoading,
-    isError,
-    error,
+    // TODO: add error handling
+    /* isError,
+    error, */
   } = useCreateProduct();
 
   const onSubmit = (data: ProductFormData) => {
@@ -143,6 +144,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
           )}
         </div>
 
+        {/* TODO: add error handling */}
         {/* {isError && <ErrorInfo error={error} context="criar produto" />} */}
 
         <Button type="submit" disabled={isLoading}>
