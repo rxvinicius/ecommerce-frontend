@@ -17,18 +17,18 @@ export default function ProductList() {
     isError,
   } = useGetProducts({ page, limit });
 
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center min-h-[300px]">
-        <Spinner className="w-10 h-10 animate-spin text-primary" />
-      </div>
-    );
-
   if (isError || !products)
     return (
       <div className="flex flex-col items-center justify-center gap-2 text-center text-destructive min-h-[300px]">
         <AlertTriangle className="w-8 h-8" />
         <p>Erro ao carregar produtos.</p>
+      </div>
+    );
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-[300px]">
+        <Spinner className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
 
