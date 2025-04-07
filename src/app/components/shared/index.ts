@@ -1,3 +1,4 @@
+export { default as DeleteConfirmationModal } from "./DeleteConfirmationModal";
 export { default as FileUploader } from "./FileUploader";
 export { default as Footer } from "./Footer";
 export { default as Header } from "./Header";

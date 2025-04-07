@@ -81,3 +81,20 @@ export const useUpdateProduct = () => {
     },
   });
 };
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => productService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError: (err: AxiosError<ApiError>) => {
+      throw new Error(
+        err?.response?.data?.message ||
+          "Erro ao excluir produto. Tente novamente mais tarde."
+      );
+    },
+  });
+};

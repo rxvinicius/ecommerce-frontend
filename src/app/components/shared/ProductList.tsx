@@ -4,8 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import { useGetProducts } from "@/hooks/useProductActions";
-import { Pagination, ProductCard } from "@/components/shared";
+import { useDeleteProduct, useGetProducts } from "@/hooks/useProductActions";
+import { Product } from "@/types/product";
+import {
+  DeleteConfirmationModal,
+  Pagination,
+  ProductCard,
+} from "@/components/shared";
 import { AlertTriangle, PackageSearch, Spinner } from "@/components/ui/icons";
 import { Button } from "../ui/button";
 
@@ -14,11 +19,15 @@ const limit = 6;
 export default function ProductList() {
   const router = useRouter();
   const [page, setPage] = useState(1);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
     data: products,
     isLoading,
     isError,
   } = useGetProducts({ page, limit });
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
   if (isLoading && !isError)
     return (
@@ -53,6 +62,24 @@ export default function ProductList() {
       </div>
     );
 
+  const handleOpenModalDelete = (product: Product) => {
+    setProductToDelete(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModalDelete = () => {
+    setIsModalOpen(false);
+    setProductToDelete(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!productToDelete) return;
+
+    deleteProduct(productToDelete.id, {
+      onSuccess: () => handleCloseModalDelete(),
+    });
+  };
+
   return (
     <div className="flex flex-col text-start justify-center sm:justify-start">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
@@ -61,7 +88,7 @@ export default function ProductList() {
             key={product.id}
             product={product}
             onEdit={() => router.push(`/admin/products/${product.id}/edit`)}
-            onDelete={() => console.log("delete")}
+            onDelete={() => handleOpenModalDelete(product)}
           />
         ))}
       </div>
@@ -70,6 +97,14 @@ export default function ProductList() {
         page={page}
         lastPage={products.meta.lastPage}
         onPageChange={setPage}
+      />
+
+      <DeleteConfirmationModal
+        open={isModalOpen}
+        isLoading={isDeleting}
+        name={productToDelete?.name}
+        onClose={handleCloseModalDelete}
+        onConfirm={handleDeleteConfirm}
       />
     </div>
   );
