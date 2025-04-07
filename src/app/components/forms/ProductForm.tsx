@@ -1,14 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
 import {
-  productSchema,
-  ProductFormData,
+  createProductSchema,
+  updateProductSchema,
+  CreateProductFormData,
+  UpdateProductFormData,
 } from "@/lib/validations/product.schema";
-import { useCreateProduct } from "@/hooks/useProductActions";
+
+import { useCreateProduct, useUpdateProduct } from "@/hooks/useProductActions";
 import useNumericInput from "@/hooks/useNumericInput";
 
 import { Input } from "@/components/ui/input";
@@ -16,21 +20,27 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/icons";
 import { Textarea } from "@/components/ui/textarea";
-import FileUploader from "@/components/shared/FileUploader";
-// TODO: add error handling
-// import ErrorInfo from "../auth/ErrorInfo";
+import { FileUploader, RemoveButton } from "@/components/shared";
 import { ProductFormProps } from "@/types/product";
+
+const MAX_FILES = 6;
 
 export default function ProductForm({ action, product }: ProductFormProps) {
   const router = useRouter();
+  const isCreate = action === "create";
+  const maxFiles =
+    !isCreate && product ? MAX_FILES - product?.images.length : MAX_FILES;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     setValue,
-  } = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
+    getValues,
+    setError,
+  } = useForm<CreateProductFormData | UpdateProductFormData>({
+    resolver: zodResolver(isCreate ? createProductSchema : updateProductSchema),
     defaultValues: {
       name: product?.name || "",
       description: product?.description || "",
@@ -38,31 +48,80 @@ export default function ProductForm({ action, product }: ProductFormProps) {
       images: [],
     },
   });
-  const { value, handleChange } = useNumericInput();
 
-  const {
-    mutate: createProduct,
-    isPending: isLoading,
-    // TODO: add error handling
-    /* isError,
-    error, */
-  } = useCreateProduct();
+  const { mutate: createProduct, isPending: isCreating } = useCreateProduct();
+  const { mutate: updateProduct, isPending: isUpdating } = useUpdateProduct();
+  const { value, handleChange, setValue: setNumericValue } = useNumericInput();
 
-  const onSubmit = (data: ProductFormData) => {
-    const formData = new FormData();
+  const isLoading = isCreating || isUpdating;
 
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("price", data.price.toString());
-    data.images.forEach((img) => formData.append("images", img));
+  const [existingImages, setExistingImages] = useState<string[]>(
+    product?.images || []
+  );
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
 
-    createProduct(formData, {
-      onSuccess: () => {
-        reset();
-        router.push("/admin");
+  const onSubmit = (data: CreateProductFormData | UpdateProductFormData) => {
+    if (isCreate) {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("price", data.price.toString());
+      (data.images || []).forEach((img) => formData.append("images", img));
+
+      createProduct(formData, {
+        onSuccess: () => {
+          reset();
+          router.push("/products");
+        },
+      });
+      return;
+    }
+
+    // UPDATE FLOW
+    const updateData = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+    };
+
+    const imagesToAdd = getValues("images");
+    if (!imagesToAdd) return; // only to stop typescript error...
+    const totalFinalImages = existingImages.length + imagesToAdd.length;
+
+    if (totalFinalImages === 0) {
+      setError("images", {
+        type: "manual",
+        message: "Adicione pelo menos uma imagem ou mantenha uma existente.",
+      });
+      return;
+    }
+
+    updateProduct(
+      {
+        id: product!.id,
+        data: updateData,
+        imagesToAdd,
+        imagesToRemove: removedImages,
       },
-    });
+      {
+        onSuccess: () => {
+          router.push("/products");
+        },
+      }
+    );
   };
+
+  const handleRemoveExistingImage = (url: string) => {
+    setExistingImages((prev) => prev.filter((img) => img !== url));
+    setRemovedImages((prev) => [...prev, url]);
+  };
+
+  useEffect(() => {
+    if (product?.price) {
+      const formatted = product.price.toFixed(2).replace(".", ",");
+      setNumericValue(formatted);
+    }
+  }, [product, setNumericValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 max-w-2xl">
@@ -112,33 +171,38 @@ export default function ProductForm({ action, product }: ProductFormProps) {
             }}
             disabled={isLoading}
           />
-
           {errors.price && (
             <p className="small-medium error">{errors.price.message}</p>
           )}
         </div>
 
-        {/* <div className="grid gap-2">
-          <Label htmlFor="images">Imagens</Label>
-          <Input
-            id="images"
-            type="file"
-            multiple
-            accept="image/*"
-            {...register("images")}
-            disabled={isLoading}
-          />
-          {errors.images && (
-            <p className="small-medium error">{errors.images.message}</p>
-          )}
-        </div> */}
-
+        {/* Imagens existentes + upload */}
         <div className="grid gap-2">
           <Label htmlFor="images">Imagens</Label>
+
+          {!isCreate && existingImages.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {existingImages.map((img, index) => (
+                <div key={index} className="relative w-24 h-24">
+                  <img
+                    src={img}
+                    alt={`Imagem ${index + 1}`}
+                    className="object-cover w-full h-full rounded-md border"
+                  />
+                  <RemoveButton
+                    onClick={() => handleRemoveExistingImage(img)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
           <FileUploader
             onChange={(files) => setValue("images", files)}
             disabled={isLoading}
+            maxFiles={maxFiles}
           />
+
           {errors.images && (
             <p className="small-medium error">{errors.images.message}</p>
           )}
@@ -146,11 +210,10 @@ export default function ProductForm({ action, product }: ProductFormProps) {
 
         {/* TODO: add error handling */}
         {/* {isError && <ErrorInfo error={error} context="criar produto" />} */}
-
         <Button type="submit" disabled={isLoading}>
           {isLoading ? (
             <Spinner className="animate-spin" />
-          ) : action === "create" ? (
+          ) : isCreate ? (
             "Criar"
           ) : (
             "Atualizar"

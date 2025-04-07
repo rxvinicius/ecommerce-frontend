@@ -6,10 +6,12 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { ImagePlus, Spinner, X, Check } from "@/components/ui/icons";
+import RemoveButton from "./RemoveButton";
 
 type FileUploaderProps = {
   onChange: (files: File[]) => void;
   disabled?: boolean;
+  maxFiles?: number;
 };
 
 const MAX_FILES = 6;
@@ -19,6 +21,7 @@ const ACCEPTED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 export default function FileUploader({
   onChange,
   disabled,
+  maxFiles = MAX_FILES,
 }: FileUploaderProps) {
   const [previews, setPreviews] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
@@ -47,8 +50,8 @@ export default function FileUploader({
     (acceptedFiles: FileWithPath[]) => {
       setIsLoading(true);
       const totalFiles = [...files, ...acceptedFiles];
-      if (totalFiles.length > MAX_FILES) {
-        setError(`Limite de ${MAX_FILES} imagens excedido`);
+      if (totalFiles.length > maxFiles) {
+        setError(`Limite de ${maxFiles} imagens excedido`);
         setIsLoading(false);
         return;
       }
@@ -109,7 +112,7 @@ export default function FileUploader({
             <ImagePlus className="w-5 h-5" />
           )}
           <p className="text-sm">
-            Clique ou arraste as imagens aqui ({files.length}/{MAX_FILES})
+            Clique ou arraste as imagens aqui ({files.length}/{maxFiles})
           </p>
         </div>
       </div>
@@ -135,13 +138,7 @@ export default function FileUploader({
                 fill
                 className="object-contain h-32 w-full"
               />
-              <button
-                type="button"
-                className="absolute top-1 right-1 bg-white dark:bg-black rounded-full p-1 shadow cursor-pointer"
-                onClick={() => removeImage(i)}
-              >
-                <X className="w-4 h-4 text-red-500 transition-transform duration-200 hover:rotate-90" />
-              </button>
+              <RemoveButton onClick={() => removeImage(i)} />
             </div>
           ))}
         </div>

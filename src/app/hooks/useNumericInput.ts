@@ -32,5 +32,9 @@ export default function useNumericInput({
     [min, max]
   );
 
-  return { value, handleChange };
+  return {
+    value,
+    handleChange,
+    setValue,
+  };
 }

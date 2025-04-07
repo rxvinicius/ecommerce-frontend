@@ -18,6 +18,7 @@ import {
   X,
   Check,
   AlertTriangle,
+  Pencil,
 } from "lucide-react";
 
 export {
@@ -40,4 +41,5 @@ export {
   X,
   Check,
   AlertTriangle,
+  Pencil,
 };

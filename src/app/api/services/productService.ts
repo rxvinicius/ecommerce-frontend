@@ -32,9 +32,12 @@ class ProductService {
     });
   }
 
-  update(id: string, dto: Partial<CreateProductDTO>) {
-    return api.put<Product>(`/products/${id}`, dto, {
-      headers: this.getAuthHeaders(),
+  updateMultipart(id: string, formData: FormData) {
+    return api.put<Product>(`/products/${id}`, formData, {
+      headers: {
+        ...this.getAuthHeaders(),
+        "Content-Type": "multipart/form-data",
+      },
     });
   }
 
