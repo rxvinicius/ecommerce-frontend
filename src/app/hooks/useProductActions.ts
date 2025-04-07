@@ -69,8 +69,9 @@ export const useUpdateProduct = () => {
 
       return productService.updateMultipart(id, formData);
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product", id] });
     },
     onError: (err: AxiosError<ApiError>) => {
       throw new Error(
