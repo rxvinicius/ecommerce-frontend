@@ -9,7 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Spinner, Trash, X } from "@/components/ui/icons";
+import { Spinner, Trash } from "@/components/ui/icons";
 
 interface DeleteConfirmationModalProps {
   open: boolean;
@@ -59,7 +59,8 @@ const DeleteConfirmationModal = ({
         >
           {isLoading ? (
             <>
-              <Spinner className="h-5 w-5 animate-spin" /> "Excluindo..."
+              <Spinner className="h-5 w-5 animate-spin" />
+              Excluindo...
             </>
           ) : (
             "Confirmar"
