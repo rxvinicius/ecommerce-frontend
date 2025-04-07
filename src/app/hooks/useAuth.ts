@@ -12,20 +12,21 @@ type User = {
 
 export default function useAuth() {
   const [user, setUser] = useState<User | null>(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
 
-  const syncAuth = () => setUser(authStorage.getUser());
+  const syncAuth = () => {
+    setUser(authStorage.getUser());
+    setAuthLoaded(true);
+  };
 
   useEffect(() => {
     syncAuth();
     window.addEventListener(AUTH_EVENT_KEY, syncAuth);
-
-    return () => {
-      window.removeEventListener(AUTH_EVENT_KEY, syncAuth);
-    };
+    return () => window.removeEventListener(AUTH_EVENT_KEY, syncAuth);
   }, []);
 
-  const isAdmin = user && isAdminUser(user?.role);
+  const isAdmin = user && isAdminUser(user.role);
   const isAuthenticated = !!user;
 
-  return { user, isAdmin, isAuthenticated };
+  return { user, isAdmin, isAuthenticated, authLoaded };
 }

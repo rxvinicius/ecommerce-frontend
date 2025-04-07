@@ -20,8 +20,10 @@ export default function ProductCard({
   onDelete,
   onAddToCart,
 }: Props) {
-  const { isAdmin } = useAuth();
   const router = useRouter();
+  const { isAdmin, authLoaded } = useAuth();
+
+  if (!authLoaded) return null;
 
   return (
     <div
