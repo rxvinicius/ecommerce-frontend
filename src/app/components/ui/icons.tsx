@@ -19,6 +19,8 @@ import {
   Check,
   AlertTriangle,
   Pencil,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 export {
@@ -42,4 +44,6 @@ export {
   Check,
   AlertTriangle,
   Pencil,
+  ChevronLeft,
+  ChevronRight,
 };
