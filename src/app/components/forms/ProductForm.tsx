@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -28,8 +29,6 @@ const MAX_FILES = 6;
 export default function ProductForm({ action, product }: ProductFormProps) {
   const router = useRouter();
   const isCreate = action === "create";
-  const maxFiles =
-    !isCreate && product ? MAX_FILES - product?.images.length : MAX_FILES;
 
   const {
     register,
@@ -60,6 +59,10 @@ export default function ProductForm({ action, product }: ProductFormProps) {
   );
   const [removedImages, setRemovedImages] = useState<string[]>([]);
 
+  const dynamicMaxFiles = useMemo(() => {
+    return MAX_FILES - (existingImages.length ?? 0);
+  }, [existingImages]);
+
   const onSubmit = (data: CreateProductFormData | UpdateProductFormData) => {
     if (isCreate) {
       const formData = new FormData();
@@ -84,8 +87,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
       price: data.price,
     };
 
-    const imagesToAdd = getValues("images");
-    if (!imagesToAdd) return; // only to stop typescript error...
+    const imagesToAdd = getValues("images") || [];
     const totalFinalImages = existingImages.length + imagesToAdd.length;
 
     if (totalFinalImages === 0) {
@@ -176,7 +178,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
           )}
         </div>
 
-        {/* Imagens existentes + upload */}
+        {/* Existing images + upload */}
         <div className="grid gap-2">
           <Label htmlFor="images">Imagens</Label>
 
@@ -200,7 +202,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
           <FileUploader
             onChange={(files) => setValue("images", files)}
             disabled={isLoading}
-            maxFiles={maxFiles}
+            maxFiles={dynamicMaxFiles}
           />
 
           {errors.images && (
