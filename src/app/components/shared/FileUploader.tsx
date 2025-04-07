@@ -5,7 +5,7 @@ import { useDropzone, FileWithPath } from "react-dropzone";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { ImagePlus, Spinner, X, Check } from "@/components/ui/icons";
+import { ImagePlus, Spinner, Check } from "@/components/ui/icons";
 import RemoveButton from "./RemoveButton";
 
 type FileUploaderProps = {

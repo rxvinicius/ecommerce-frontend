@@ -1,7 +1,6 @@
 import api from "../apiConfig";
 import {
   Product,
-  CreateProductDTO,
   PaginatedProductResponse,
   GetProductsParams,
 } from "@/types/product";
