@@ -12,6 +12,7 @@ export default function ProductDetailPage() {
   const { id } = useParams();
   const { data: product, isLoading, isError } = useGetProductById(id as string);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   if (isLoading) {
     return (
@@ -29,19 +30,31 @@ export default function ProductDetailPage() {
     );
   }
 
+  function handleTransitionChange(action: () => void) {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      action();
+      setIsTransitioning(false);
+    }, 200);
+  }
+
   const handleThumbnailClick = (index: number) => {
-    setCurrentImageIndex(index);
+    handleTransitionChange(() => setCurrentImageIndex(index));
   };
 
   const handlePrev = () => {
-    setCurrentImageIndex((prev) =>
-      prev === 0 ? product.images.length - 1 : prev - 1
+    handleTransitionChange(() =>
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? product.images.length - 1 : prev - 1
+      )
     );
   };
 
   const handleNext = () => {
-    setCurrentImageIndex((prev) =>
-      prev === product.images.length - 1 ? 0 : prev + 1
+    handleTransitionChange(() =>
+      setCurrentImageIndex((prev) =>
+        prev === product.images.length - 1 ? 0 : prev + 1
+      )
     );
   };
 
@@ -51,9 +64,12 @@ export default function ProductDetailPage() {
         <div>
           <div className="relative w-full h-[400px] border rounded-lg overflow-hidden">
             <img
+              key={currentImageIndex} // to force re-render of the image
               src={product.images[currentImageIndex]}
               alt={product.name}
-              className="object-contain w-full h-full rounded-lg"
+              className={`object-contain w-full h-full rounded-lg transition-opacity duration-200 ${
+                isTransitioning ? "opacity-0" : "opacity-100"
+              }`}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
 
