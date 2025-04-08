@@ -3,29 +3,45 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useGetProductById } from "@/hooks/useProductActions";
+import useProductDelete from "@/hooks/useProductDelete";
 import useCart from "@/hooks/useCart";
+import useAuth from "@/hooks/useAuth";
+
 import { Button } from "@/components/ui/button";
 import {
   ChevronLeft,
   ChevronRight,
+  Edit,
   Minus,
   Plus,
   Spinner,
+  Trash,
 } from "@/components/ui/icons";
+import { DeleteConfirmationModal } from "@/components/shared";
 
 export default function ProductDetailPage() {
+  const router = useRouter();
   const { id } = useParams();
   const { data: product, isLoading, isError } = useGetProductById(id as string);
+  const { isAdmin, authLoaded } = useAuth();
+  const {
+    isModalOpen,
+    isDeleting,
+    productToDelete,
+    handleOpenModal,
+    handleCloseModal,
+    handleDeleteConfirm,
+  } = useProductDelete();
   const { addToCart } = useCart();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  if (isLoading) {
+  if (isLoading || !authLoaded) {
     return (
       <div className="flex justify-center items-center min-h-[300px]">
         <Spinner className="h-8 w-8 animate-spin text-primary" />
@@ -67,6 +83,11 @@ export default function ProductDetailPage() {
         prev === product.images.length - 1 ? 0 : prev + 1
       )
     );
+  };
+
+  const handleProductDeleted = () => {
+    handleDeleteConfirm();
+    router.push("/products");
   };
 
   const handleAddToCart = () => addToCart(product, quantity);
@@ -167,20 +188,57 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-6">
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto"
-              size="lg"
-              onClick={handleAddToCart}
-            >
-              Adicionar ao carrinho
-            </Button>
-            <Button className="w-full sm:w-auto" size="lg">
-              Comprar agora
-            </Button>
+            {isAdmin ? (
+              <>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() =>
+                    router.push(`/admin/products/${product.id}/edit`)
+                  }
+                >
+                  <Edit className="h-4 w-4" />
+                  Editar
+                </Button>
+                <Button
+                  size="lg"
+                  variant="destructive"
+                  className="w-full sm:w-auto"
+                  onClick={() => handleOpenModal(product)}
+                >
+                  <Trash className="h-4 w-4" />
+                  Excluir
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  size="lg"
+                  onClick={handleAddToCart}
+                >
+                  Adicionar ao carrinho
+                </Button>
+                <Button className="w-full sm:w-auto" size="lg">
+                  Comprar agora
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
+
+      {isAdmin && (
+        <DeleteConfirmationModal
+          open={isModalOpen}
+          isLoading={isDeleting}
+          name={productToDelete?.name}
+          onClose={handleCloseModal}
+          onConfirm={handleProductDeleted}
+        />
+      )}
     </div>
   );
 }
