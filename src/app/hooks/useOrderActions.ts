@@ -14,7 +14,14 @@ export const useCreateOrder = () => {
   return useMutation({
     mutationFn: (data: OrderDTO) => orderService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] }); // Admin
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) &&
+          query.queryKey[0] === "orders" &&
+          query.queryKey.length > 1, // ["orders", userId]
+      }); // Customer
+
       cartStorage.clearCart();
     },
     onError: (err: AxiosError<ApiError>) => {

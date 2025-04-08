@@ -28,4 +28,12 @@ export {
 } from "lucide-react";
 
 // UI
-export { X, Check, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
+export {
+  X,
+  Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Minus,
+  Plus,
+} from "lucide-react";

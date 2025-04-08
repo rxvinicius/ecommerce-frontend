@@ -43,13 +43,8 @@ export default function CheckoutPage() {
     };
 
     createOrder(payload, {
-      onSuccess: () => {
-        console.log("Pedido finalizado!");
-        router.push("/");
-      },
-      onError: (err) => {
-        console.error("Erro ao finalizar pedido:", err);
-      },
+      onSuccess: () => router.push("/checkout/success"),
+      onError: (err) => console.error("Erro ao finalizar pedido:", err),
     });
   });
 
