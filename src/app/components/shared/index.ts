@@ -7,4 +7,5 @@ export { default as ProductList } from "./ProductList";
 export { default as ProfileDropdown } from "./ProfileDropdown";
 export { default as PageHeader } from "./PageHeader";
 export { default as Pagination } from "./Pagination";
+export { default as QuantityInput } from "./QuantityInput";
 export { default as RemoveButton } from "./RemoveButton";

@@ -20,7 +20,7 @@ import {
   Spinner,
   Trash,
 } from "@/components/ui/icons";
-import { DeleteConfirmationModal } from "@/components/shared";
+import { DeleteConfirmationModal, QuantityInput } from "@/components/shared";
 
 export default function ProductDetailPage() {
   const router = useRouter();
@@ -92,8 +92,10 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => addToCart(product, quantity);
 
-  const increment = () => setQuantity((q) => q + 1);
-  const decrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+  const handleCheckout = () => {
+    handleAddToCart();
+    router.push("/checkout");
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -166,25 +168,13 @@ export default function ProductDetailPage() {
 
           <div className="flex items-center gap-4">
             <span className="text-muted-foreground text-sm">Quantidade:</span>
-            <div className="flex items-center border rounded-md">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={decrement}
-                className="px-3 py-1 hover:bg-accent text-muted-foreground"
-              >
-                <Minus className="w-4 h-4" />
-              </Button>
-              <span className="px-4">{quantity}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={increment}
-                className="px-3 py-1 hover:bg-accent text-muted-foreground"
-              >
-                <Plus className="w-4 h-4" />
-              </Button>
-            </div>
+            <QuantityInput
+              value={quantity}
+              onIncrement={() => setQuantity((prev) => prev + 1)}
+              onDecrement={() =>
+                setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+              }
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-6">
@@ -221,7 +211,11 @@ export default function ProductDetailPage() {
                 >
                   Adicionar ao carrinho
                 </Button>
-                <Button className="w-full sm:w-auto" size="lg">
+                <Button
+                  className="w-full sm:w-auto"
+                  size="lg"
+                  onClick={handleCheckout}
+                >
                   Comprar agora
                 </Button>
               </>

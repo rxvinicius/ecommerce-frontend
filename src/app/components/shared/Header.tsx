@@ -44,7 +44,7 @@ export default function Header() {
             ) : (
               <div className="relative">
                 <Button variant="ghost" size="icon" asChild>
-                  <Link href="/cart">
+                  <Link href={isAuthenticated ? "/checkout" : "/login"}>
                     <ShoppingCart className="w-6 h-6" />
                     <span className="sr-only">Carrinho</span>
                   </Link>

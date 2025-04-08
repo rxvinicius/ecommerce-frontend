@@ -22,13 +22,13 @@ export default function ProductCard({ product, onEdit, onDelete }: Props) {
   return (
     <div className="group w-full max-w-sm border rounded-xl p-4 flex flex-col gap-2 shadow-sm transition hover:shadow-md bg-white dark:bg-zinc-900 cursor-pointer">
       <div
-        className="relative w-full h-48 overflow-hidden rounded-lg"
+        className="relative w-full min-h-[190px] flex items-center justify-center overflow-hidden rounded-lg bg-muted"
         onClick={() => router.push(`/products/${product.id}`)}
       >
         <img
           src={product.images[0]}
           alt={product.name}
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
         />
       </div>
 

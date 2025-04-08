@@ -15,7 +15,7 @@ import {
 import { AlertTriangle, PackageSearch, Spinner } from "@/components/ui/icons";
 import { Button } from "../ui/button";
 
-const limit = 6;
+const limit = 8;
 
 export default function ProductList() {
   const router = useRouter();

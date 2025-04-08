@@ -52,12 +52,12 @@ export default function ProductForm({ action, product }: ProductFormProps) {
   const { mutate: updateProduct, isPending: isUpdating } = useUpdateProduct();
   const { value, handleChange, setValue: setNumericValue } = useNumericInput();
 
-  const isLoading = isCreating || isUpdating;
-
   const [existingImages, setExistingImages] = useState<string[]>(
     product?.images || []
   );
   const [removedImages, setRemovedImages] = useState<string[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const isLoading = isCreating || isUpdating || isSubmitted;
 
   const dynamicMaxFiles = useMemo(() => {
     return MAX_FILES - (existingImages.length ?? 0);
@@ -73,6 +73,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
 
       createProduct(formData, {
         onSuccess: () => {
+          setIsSubmitted(true);
           reset();
           router.push("/products");
         },
@@ -91,6 +92,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
     const totalFinalImages = existingImages.length + imagesToAdd.length;
 
     if (totalFinalImages === 0) {
+      setIsSubmitted(false);
       setError("images", {
         type: "manual",
         message: "Adicione pelo menos uma imagem ou mantenha uma existente.",
@@ -107,6 +109,7 @@ export default function ProductForm({ action, product }: ProductFormProps) {
       },
       {
         onSuccess: () => {
+          setIsSubmitted(true);
           router.push("/products");
         },
       }
