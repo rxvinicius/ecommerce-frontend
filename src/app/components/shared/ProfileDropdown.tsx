@@ -1,5 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
+import { logout } from "@/hooks/useAuthActions";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,12 +11,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User } from "@/components/ui/icons";
-import useAuth from "@/hooks/useAuth";
-import { useLogout } from "@/hooks/useAuthActions";
 
 export default function ProfileDropdown() {
   const { isAdmin } = useAuth();
-  const logout = useLogout();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <DropdownMenu>
@@ -23,7 +29,7 @@ export default function ProfileDropdown() {
           size="icon"
           className="hover:bg-gray-100 rounded-full"
         >
-          <User className="header-icon" />
+          <User className="h-5 w-5" />
           <span className="sr-only">Perfil</span>
         </Button>
       </DropdownMenuTrigger>
@@ -50,7 +56,7 @@ export default function ProfileDropdown() {
 
         <DropdownMenuItem
           className="dropdown-menu-item text-red-600 hover:bg-red-50"
-          onClick={logout}
+          onClick={handleLogout}
         >
           <LogOut className="icon" />
           <span>Sair</span>

@@ -1,38 +1,22 @@
-import {
-  Loader2 as Spinner,
+// Loaders
+export { Loader2 as Spinner } from "lucide-react";
+
+// Auth
+export {
   Mail,
   Lock,
   EyeIcon,
   EyeOff,
-  AlertCircle,
   LogOut,
   User,
   Settings,
-  ShoppingCart,
-  Package,
-  PackagePlus,
-  PackageSearch,
-  Edit,
-  Trash,
-  ImagePlus,
-  X,
-  Check,
-  AlertTriangle,
-  Pencil,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 
+// Alerts
+export { AlertCircle, AlertTriangle } from "lucide-react";
+
+// Products
 export {
-  Spinner,
-  Mail,
-  Lock,
-  EyeIcon,
-  EyeOff,
-  AlertCircle,
-  LogOut,
-  User,
-  Settings,
   ShoppingCart,
   Package,
   PackagePlus,
@@ -40,10 +24,8 @@ export {
   Edit,
   Trash,
   ImagePlus,
-  X,
-  Check,
-  AlertTriangle,
   Pencil,
-  ChevronLeft,
-  ChevronRight,
-};
+} from "lucide-react";
+
+// UI
+export { X, Check, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";

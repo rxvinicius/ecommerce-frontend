@@ -9,6 +9,7 @@ import { AuthResponse, LoginDTO, SignupDTO } from "@/types/auth";
 import { ApiError } from "@/types/api";
 import { isAdminUser } from "@/utils/auth";
 import { authStorage } from "@/utils/authStorage";
+import { cartStorage } from "@/utils/cartStorage";
 
 function handleAuthSuccess(
   data: AuthResponse,
@@ -50,11 +51,7 @@ export const useSignUp = () => {
   });
 };
 
-export const useLogout = () => {
-  const router = useRouter();
-
-  return () => {
-    authStorage.clearAuth();
-    router.push("/login");
-  };
+export const logout = () => {
+  authStorage.clearAuth();
+  cartStorage.clearCart();
 };

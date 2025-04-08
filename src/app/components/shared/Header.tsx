@@ -1,15 +1,20 @@
 "use client";
 
 import Link from "next/link";
+// TODO: add functionality to search for products
 // import { SearchInput } from "@/components/ui/search-input"
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, User, PackagePlus } from "@/components/ui/icons";
 import useAuth from "@/hooks/useAuth";
+import useCart from "@/hooks/useCart";
 import { Input } from "../ui/input";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Header() {
   const { isAdmin, isAuthenticated } = useAuth();
+  const { cart } = useCart();
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -28,31 +33,37 @@ export default function Header() {
           </div>
 
           {/* Action icons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative">
             {isAdmin ? (
               <Button variant="ghost" size="icon" asChild>
                 <Link href="/admin/products/new">
-                  <PackagePlus className="header-icon" />
+                  <PackagePlus className="w-6 h-6" />
                   <span className="sr-only">Adicionar produto</span>
                 </Link>
               </Button>
             ) : (
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="/cart">
-                  <ShoppingCart className="header-icon" />
-                  <span className="sr-only">Carrinho</span>
-                </Link>
-              </Button>
+              <div className="relative">
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href="/cart">
+                    <ShoppingCart className="w-6 h-6" />
+                    <span className="sr-only">Carrinho</span>
+                  </Link>
+                </Button>
+
+                {totalItems > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-xs font-medium rounded-full w-5 h-5 flex items-center justify-center shadow">
+                    {totalItems}
+                  </span>
+                )}
+              </div>
             )}
 
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon">
               {isAuthenticated ? (
-                <div className="flex items-center gap-2">
-                  <ProfileDropdown />
-                </div>
+                <ProfileDropdown />
               ) : (
                 <Link href={isAdmin ? "/admin" : "/login"}>
-                  <User className="header-icon" />
+                  <User className="w-6 h-6" />
                   <span className="sr-only">Perfil</span>
                 </Link>
               )}

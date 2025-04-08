@@ -4,15 +4,26 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+
 import { useGetProductById } from "@/hooks/useProductActions";
+import useCart from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Spinner } from "@/components/ui/icons";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Minus,
+  Plus,
+  Spinner,
+} from "@/components/ui/icons";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
   const { data: product, isLoading, isError } = useGetProductById(id as string);
+  const { addToCart } = useCart();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   if (isLoading) {
     return (
@@ -57,6 +68,11 @@ export default function ProductDetailPage() {
       )
     );
   };
+
+  const handleAddToCart = () => addToCart(product, quantity);
+
+  const increment = () => setQuantity((q) => q + 1);
+  const decrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -127,8 +143,36 @@ export default function ProductDetailPage() {
             R$ {product.price.toFixed(2)}
           </p>
 
+          <div className="flex items-center gap-4">
+            <span className="text-muted-foreground text-sm">Quantidade:</span>
+            <div className="flex items-center border rounded-md">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={decrement}
+                className="px-3 py-1 hover:bg-accent text-muted-foreground"
+              >
+                <Minus className="w-4 h-4" />
+              </Button>
+              <span className="px-4">{quantity}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={increment}
+                className="px-3 py-1 hover:bg-accent text-muted-foreground"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 pt-6">
-            <Button variant="outline" className="w-full sm:w-auto" size="lg">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              size="lg"
+              onClick={handleAddToCart}
+            >
               Adicionar ao carrinho
             </Button>
             <Button className="w-full sm:w-auto" size="lg">
