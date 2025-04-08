@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import Image from "next/image";
 
@@ -29,6 +29,13 @@ export default function FileUploader({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  // Keep maxFiles up to date without having to re-execute the onDrop hook
+  const maxFilesRef = useRef(maxFiles);
+
+  useEffect(() => {
+    maxFilesRef.current = maxFiles;
+  }, [maxFiles]);
+
   const validateFiles = (incomingFiles: File[]) => {
     const validFiles: File[] = [];
     for (const file of incomingFiles) {
@@ -50,8 +57,8 @@ export default function FileUploader({
     (acceptedFiles: FileWithPath[]) => {
       setIsLoading(true);
       const totalFiles = [...files, ...acceptedFiles];
-      if (totalFiles.length > maxFiles) {
-        setError(`Limite de ${maxFiles} imagens excedido`);
+      if (totalFiles.length > maxFilesRef.current) {
+        setError(`Limite de ${maxFilesRef.current} imagens excedido`);
         setIsLoading(false);
         return;
       }
