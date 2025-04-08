@@ -6,10 +6,7 @@ import { cartStorage } from "@/utils/cartStorage";
 import { CART_EVENT_KEY } from "@/constants/storage";
 
 export default function useCart() {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const stored = cartStorage.getCart();
-    return Array.isArray(stored) ? stored : [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   const syncCart = () => {
     const stored = cartStorage.getCart();
@@ -24,7 +21,7 @@ export default function useCart() {
     };
   }, []);
 
-  const addToCart = (product: CartItem["product"], quantity: number = 1) => {
+  const addToCart = (product: CartItem["product"], quantity = 1) => {
     const existing = cart.find((item) => item.product.id === product.id);
     const updatedCart = existing
       ? cart.map((item) =>
