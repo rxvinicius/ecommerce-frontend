@@ -81,25 +81,25 @@ export default function ProductList() {
   };
 
   return (
-    <div className="flex flex-col text-start justify-center">
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6 place-items-center sm:place-items-start">
-          {products.data.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onEdit={() => router.push(`/admin/products/${product.id}/edit`)}
-              onDelete={() => handleOpenModalDelete(product)}
-            />
-          ))}
-        </div>
+    <div className="flex flex-col flex-grow justify-between min-h-[70vh]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6 place-items-center sm:place-items-start">
+        {products.data.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onEdit={() => router.push(`/admin/products/${product.id}/edit`)}
+            onDelete={() => handleOpenModalDelete(product)}
+          />
+        ))}
       </div>
 
-      <Pagination
-        page={page}
-        lastPage={products.meta.lastPage}
-        onPageChange={setPage}
-      />
+      <div className="mt-auto pt-4">
+        <Pagination
+          page={page}
+          lastPage={products.meta.lastPage}
+          onPageChange={setPage}
+        />
+      </div>
 
       <DeleteConfirmationModal
         open={isModalOpen}

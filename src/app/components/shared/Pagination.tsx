@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "@/components/ui/icons";
 
 type PaginationProps = {
   page: number;
@@ -31,7 +31,8 @@ export default function Pagination({
         onClick={goToPrevious}
         disabled={isFirst}
         variant="outline"
-        size="icon"
+        size="sm"
+        className="rounded-sm"
       >
         <ChevronLeft className="w-5 h-5" />
       </Button>
@@ -44,7 +45,8 @@ export default function Pagination({
         onClick={goToNext}
         disabled={isLast}
         variant="outline"
-        size="icon"
+        size="sm"
+        className="rounded-sm"
       >
         <ChevronRight className="w-5 h-5" />
       </Button>
