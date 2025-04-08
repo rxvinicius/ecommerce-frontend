@@ -4,14 +4,9 @@ import {
   PaginatedProductResponse,
   GetProductsParams,
 } from "@/types/product";
-import { authStorage } from "@/utils/authStorage";
+import { getAuthHeaders } from "../helpers";
 
 class ProductService {
-  private getAuthHeaders() {
-    const token = authStorage.getToken();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
-
   getAll(params?: GetProductsParams) {
     return api.get<PaginatedProductResponse>("/products", {
       params,
@@ -25,7 +20,7 @@ class ProductService {
   create(formData: FormData) {
     return api.post<Product>("/products", formData, {
       headers: {
-        ...this.getAuthHeaders(),
+        ...getAuthHeaders(),
         "Content-Type": "multipart/form-data",
       },
     });
@@ -34,15 +29,15 @@ class ProductService {
   updateMultipart(id: string, formData: FormData) {
     return api.put<Product>(`/products/${id}`, formData, {
       headers: {
-        ...this.getAuthHeaders(),
+        ...getAuthHeaders(),
         "Content-Type": "multipart/form-data",
       },
     });
   }
 
-  delete(id: string) {
-    return api.delete(`/products/${id}`, {
-      headers: this.getAuthHeaders(),
+  deactivate(id: string) {
+    return api.patch(`/products/${id}/deactivate`, {
+      headers: getAuthHeaders(),
     });
   }
 }
