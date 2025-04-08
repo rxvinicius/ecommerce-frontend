@@ -3,7 +3,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Edit, Trash } from "@/components/ui/icons";
+import { Edit, Trash } from "@/components/ui/icons";
 import { Product } from "@/types/product";
 import useAuth from "@/hooks/useAuth";
 
@@ -11,15 +11,9 @@ type Props = {
   product: Product;
   onEdit?: () => void;
   onDelete?: () => void;
-  onAddToCart?: () => void;
 };
 
-export default function ProductCard({
-  product,
-  onEdit,
-  onDelete,
-  onAddToCart,
-}: Props) {
+export default function ProductCard({ product, onEdit, onDelete }: Props) {
   const router = useRouter();
   const { isAdmin, authLoaded } = useAuth();
 
