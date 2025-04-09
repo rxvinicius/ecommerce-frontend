@@ -8,10 +8,11 @@ import { useGetAllOrders } from "@/hooks/useOrderActions";
 import { formatCurrency, lastFourDigits } from "@/lib/format";
 import { AlertTriangle, PackageSearch, Spinner } from "@/components/ui/icons";
 import { Pagination } from "@/components/shared";
+import AdminOnly from "@/components/auth/AdminOnly";
 
 const limit = 10;
 
-export default function OrdersPage() {
+function OrdersContent() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const { data: orders, isLoading, isError } = useGetAllOrders({ page, limit });
@@ -105,5 +106,13 @@ export default function OrdersPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <AdminOnly>
+      <OrdersContent />
+    </AdminOnly>
   );
 }

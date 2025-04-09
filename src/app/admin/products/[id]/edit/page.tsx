@@ -10,7 +10,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import { Spinner } from "@/components/ui/icons";
 import AdminOnly from "@/components/auth/AdminOnly";
 
-export default function EditProductPage() {
+function EditProductContent() {
   const router = useRouter();
   const params = useParams();
 
@@ -38,13 +38,19 @@ export default function EditProductPage() {
   if (!product) return null;
 
   return (
-    <AdminOnly>
-      <div className="flex justify-center px-4 py-10">
-        <div className="w-full max-w-3xl space-y-8">
-          <PageHeader title="Editar Produto" icon={Pencil} />
-          <ProductForm action="update" product={product} />
-        </div>
+    <div className="flex justify-center px-4 py-10">
+      <div className="w-full max-w-3xl space-y-8">
+        <PageHeader title="Editar Produto" icon={Pencil} />
+        <ProductForm action="update" product={product} />
       </div>
+    </div>
+  );
+}
+
+export default function EditProductPage() {
+  return (
+    <AdminOnly>
+      <EditProductContent />
     </AdminOnly>
   );
 }

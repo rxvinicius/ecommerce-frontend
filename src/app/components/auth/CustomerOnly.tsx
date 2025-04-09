@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/icons";
 import useAuth from "@/hooks/useAuth";
@@ -17,13 +16,7 @@ type CustomerOnlyProps = {
  */
 export default function CustomerOnly({ children }: CustomerOnlyProps) {
   const router = useRouter();
-  const { isAdmin, isAuthenticated, authLoaded } = useAuth();
-
-  useEffect(() => {
-    if (authLoaded && (!isAuthenticated || isAdmin)) {
-      router.push("/");
-    }
-  }, [authLoaded, isAuthenticated, isAdmin, router]);
+  const { isAuthenticated, isAdmin, authLoaded } = useAuth();
 
   if (!authLoaded) {
     return (
@@ -33,7 +26,12 @@ export default function CustomerOnly({ children }: CustomerOnlyProps) {
     );
   }
 
-  if (!isAuthenticated || isAdmin) return null;
+  if (!isAuthenticated || isAdmin) {
+    if (typeof window !== "undefined") {
+      router.replace("/");
+    }
+    return null;
+  }
 
   return <>{children}</>;
 }

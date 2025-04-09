@@ -7,8 +7,9 @@ import useCart from "@/hooks/useCart";
 import { runFireworks } from "@/lib/fireworks";
 import { CheckCircle2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
+import CustomerOnly from "@/components/auth/CustomerOnly";
 
-export default function SuccessPage() {
+function SuccessContent() {
   const router = useRouter();
   const { clearCart } = useCart();
 
@@ -43,5 +44,13 @@ export default function SuccessPage() {
         </Button>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <CustomerOnly>
+      <SuccessContent />
+    </CustomerOnly>
   );
 }

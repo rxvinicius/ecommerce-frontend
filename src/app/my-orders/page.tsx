@@ -10,10 +10,11 @@ import useAuth from "@/hooks/useAuth";
 import { formatCurrency, lastFourDigits } from "@/lib/format";
 import { Spinner, AlertTriangle, PackageSearch } from "@/components/ui/icons";
 import { Pagination } from "@/components/shared";
+import CustomerOnly from "@/components/auth/CustomerOnly";
 
 const limit = 2;
 
-export default function MyOrdersPage() {
+function MyOrdersContent() {
   const router = useRouter();
   const { user } = useAuth();
   const [page, setPage] = useState(1);
@@ -112,5 +113,13 @@ export default function MyOrdersPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function MyOrdersPage() {
+  return (
+    <CustomerOnly>
+      <MyOrdersContent />
+    </CustomerOnly>
   );
 }

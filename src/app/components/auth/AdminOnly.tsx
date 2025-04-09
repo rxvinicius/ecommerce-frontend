@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/icons";
 import useAuth from "@/hooks/useAuth";
@@ -19,12 +18,6 @@ export default function AdminOnly({ children }: AdminOnlyProps) {
   const router = useRouter();
   const { isAdmin, authLoaded } = useAuth();
 
-  useEffect(() => {
-    if (authLoaded && !isAdmin) {
-      router.push("/");
-    }
-  }, [authLoaded, isAdmin, router]);
-
   if (!authLoaded) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
@@ -33,7 +26,12 @@ export default function AdminOnly({ children }: AdminOnlyProps) {
     );
   }
 
-  if (!isAdmin) return null;
+  if (!isAdmin) {
+    if (typeof window !== "undefined") {
+      router.replace("/");
+    }
+    return null;
+  }
 
   return <>{children}</>;
 }
