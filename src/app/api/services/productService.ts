@@ -1,13 +1,10 @@
 import api from "../apiConfig";
-import {
-  Product,
-  PaginatedProductResponse,
-  GetProductsParams,
-} from "@/types/product";
+import { Product, PaginatedProductResponse } from "@/types/product";
+import { PaginationParams } from "@/types/pagination";
 import { getAuthHeaders } from "../helpers";
 
 class ProductService {
-  getAll(params?: GetProductsParams) {
+  getAll(params?: PaginationParams) {
     return api.get<PaginatedProductResponse>("/products", {
       params,
     });

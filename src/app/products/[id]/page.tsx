@@ -15,8 +15,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Edit,
-  Minus,
-  Plus,
   Spinner,
   Trash,
 } from "@/components/ui/icons";

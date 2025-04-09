@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CartItem } from "@/types/cart";
 import { cartStorage } from "@/utils/cartStorage";
 import { CART_EVENT_KEY } from "@/constants/storage";
@@ -46,7 +46,9 @@ export default function useCart() {
     cartStorage.setCart(updatedCart);
   };
 
-  const clearCart = () => cartStorage.clearCart();
+  const clearCart = useCallback(() => {
+    cartStorage.clearCart();
+  }, []);
 
   return {
     cart,

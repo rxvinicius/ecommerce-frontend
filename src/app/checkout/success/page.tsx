@@ -15,7 +15,7 @@ export default function SuccessPage() {
   useEffect(() => {
     clearCart();
     runFireworks();
-  }, []);
+  }, [clearCart]);
 
   return (
     <div className="min-h-[500px] flex flex-col items-center justify-center px-4 text-center space-y-6">
