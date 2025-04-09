@@ -1,27 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useGetOrdersByUser } from "@/hooks/useOrderActions";
-import useAuth from "@/hooks/useAuth";
+import { useGetAllOrders } from "@/hooks/useOrderActions";
 import { formatCurrency, lastFourDigits } from "@/lib/format";
-import { Spinner, AlertTriangle, PackageSearch } from "@/components/ui/icons";
+import { AlertTriangle, PackageSearch, Spinner } from "@/components/ui/icons";
 import { Pagination } from "@/components/shared";
 
-const limit = 2;
+const limit = 10;
 
-export default function MyOrdersPage() {
+export default function OrdersPage() {
   const router = useRouter();
-  const { user } = useAuth();
   const [page, setPage] = useState(1);
-  const {
-    data: orders,
-    isLoading,
-    isError,
-  } = useGetOrdersByUser(user?.id || "", { page, limit });
+  const { data: orders, isLoading, isError } = useGetAllOrders({ page, limit });
 
   if (isLoading && !isError) {
     return (
@@ -35,7 +28,7 @@ export default function MyOrdersPage() {
     return (
       <div className="flex flex-col items-center justify-center gap-2 text-center text-destructive min-h-[300px]">
         <AlertTriangle className="w-8 h-8" />
-        <p>Erro ao carregar seus pedidos.</p>
+        <p>Erro ao carregar pedidos.</p>
       </div>
     );
   }
@@ -48,17 +41,14 @@ export default function MyOrdersPage() {
           <p className="text-lg font-semibold text-foreground">
             Nenhum pedido encontrado
           </p>
-          <p className="text-sm text-muted-foreground">
-            Parece que você ainda não realizou nenhuma compra.
-          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">Meus pedidos</h1>
+    <div className="max-w-6xl mx-auto px-4 py-10 space-y-6">
+      <h1 className="text-2xl font-bold mb-4">Todos os pedidos</h1>
 
       <div className="space-y-4">
         {orders.data.map((order) => (
@@ -66,22 +56,25 @@ export default function MyOrdersPage() {
             key={order.id}
             className="border rounded-md p-4 shadow-sm bg-white dark:bg-zinc-900"
           >
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm text-muted-foreground mb-2">
+              <span>
                 Pedido: <strong>{order.id.slice(0, 8)}...</strong>
               </span>
-              <span className="text-sm text-muted-foreground">
+              <span>
+                Cliente: <strong>{order.user.name}</strong>
+              </span>
+              <span>
                 {new Date(order.createdAt).toLocaleDateString("pt-BR")}
               </span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {order.items.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-4">
+                <div key={idx} className="flex items-start gap-4">
                   <img
                     src={item.product.images?.[0]}
                     alt={item.product.name}
-                    className="w-14 h-14 object-cover rounded border cursor-pointer"
+                    className="w-16 h-16 object-cover rounded border cursor-pointer"
                     onClick={() => router.push(`/products/${item.product.id}`)}
                   />
                   <div className="text-sm">
@@ -89,7 +82,7 @@ export default function MyOrdersPage() {
                     <p className="text-muted-foreground">
                       Quantidade: {item.quantity}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground">
                       Cartão final: •••• {lastFourDigits(order.cardNumber)}
                     </p>
                   </div>

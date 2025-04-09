@@ -13,9 +13,10 @@ class OrderService {
     });
   }
 
-  getAll() {
+  getAll(params?: PaginationParams) {
     return api.get("/orders", {
       headers: getAuthHeaders(),
+      params,
     });
   }
 

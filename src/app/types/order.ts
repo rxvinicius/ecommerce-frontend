@@ -36,3 +36,21 @@ export type OrderResponse = {
 
   items: OrderItem[];
 };
+
+export type AdminOrderResponse = {
+  id: string;
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+
+  cardName: string;
+  cardNumber: string;
+  cardExpiry: string;
+
+  user: {
+    id: string;
+    name: string;
+  };
+
+  items: OrderItem[];
+};

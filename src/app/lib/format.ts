@@ -3,3 +3,5 @@ export const formatCurrency = (value: number) =>
     style: "currency",
     currency: "BRL",
   });
+
+export const lastFourDigits = (value: string) => value.slice(-4);

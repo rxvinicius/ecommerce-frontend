@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import orderService from "@/api/services/orderService";
-import { OrderDTO, OrderResponse } from "@/types/order";
+import { AdminOrderResponse, OrderDTO, OrderResponse } from "@/types/order";
 import { ApiError } from "@/types/api";
 import { cartStorage } from "@/utils/cartStorage";
 import { PaginationParams, PaginatedResponse } from "@/types/pagination";
@@ -34,10 +34,10 @@ export const useCreateOrder = () => {
   });
 };
 
-export const useGetAllOrders = () => {
-  return useQuery<PaginatedResponse<OrderDTO>>({
-    queryKey: ["orders"],
-    queryFn: () => orderService.getAll().then((res) => res.data),
+export const useGetAllOrders = (params?: PaginationParams) => {
+  return useQuery<PaginatedResponse<AdminOrderResponse>>({
+    queryKey: ["orders", params],
+    queryFn: () => orderService.getAll(params).then((res) => res.data),
   });
 };
 
