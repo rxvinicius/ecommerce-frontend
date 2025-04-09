@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { useGetProducts } from "@/hooks/useProductActions";
 import useProductDelete from "@/hooks/useProductDelete";
+import useAuth from "@/hooks/useAuth";
 
 import {
   ProductCard,
@@ -26,7 +27,7 @@ export default function ProductList() {
     isLoading,
     isError,
   } = useGetProducts({ page, limit });
-
+  const { isAdmin } = useAuth();
   const {
     isModalOpen,
     isDeleting,
@@ -59,13 +60,21 @@ export default function ProductList() {
           <p className="text-lg font-semibold text-foreground">
             Nenhum produto encontrado
           </p>
-          <p className="text-sm text-muted-foreground">
-            Comece agora cadastrando o primeiro!
-          </p>
+          {isAdmin ? (
+            <p className="text-sm text-muted-foreground">
+              Comece agora cadastrando o primeiro!
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              A loja não foi inaugurada ainda!
+            </p>
+          )}
         </div>
-        <Link href="/admin/products/new">
-          <Button>Cadastrar produto</Button>
-        </Link>
+        {isAdmin && (
+          <Link href="/admin/products/new">
+            <Button>Cadastrar produto</Button>
+          </Link>
+        )}
       </div>
     );
 
