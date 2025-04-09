@@ -10,3 +10,29 @@ export type OrderDTO = {
     expiry: string;
   };
 };
+
+export type OrderItem = {
+  id: string;
+  orderId: string;
+  product: {
+    id: string;
+    images: string;
+    name: string;
+  };
+  productId: string;
+  quantity: number;
+};
+
+export type OrderResponse = {
+  id: string;
+  userId: string;
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+
+  cardName: string;
+  cardNumber: string;
+  cardExpiry: string;
+
+  items: OrderItem[];
+};

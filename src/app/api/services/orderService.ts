@@ -1,6 +1,7 @@
 import api from "../apiConfig";
 import { getAuthHeaders } from "../helpers";
 import { OrderDTO } from "@/types/order";
+import { PaginationParams } from "@/types/pagination";
 
 class OrderService {
   create(data: OrderDTO) {
@@ -18,9 +19,10 @@ class OrderService {
     });
   }
 
-  getByUserId(userId: string) {
+  getByUserId(userId: string, params?: PaginationParams) {
     return api.get(`/orders/user/${userId}`, {
       headers: getAuthHeaders(),
+      params,
     });
   }
 }

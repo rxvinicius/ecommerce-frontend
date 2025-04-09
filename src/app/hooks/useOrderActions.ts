@@ -4,9 +4,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import orderService from "@/api/services/orderService";
-import { OrderDTO } from "@/types/order";
+import { OrderDTO, OrderResponse } from "@/types/order";
 import { ApiError } from "@/types/api";
 import { cartStorage } from "@/utils/cartStorage";
+import { PaginationParams, PaginatedResponse } from "@/types/pagination";
 
 export const useCreateOrder = () => {
   const queryClient = useQueryClient();
@@ -34,16 +35,20 @@ export const useCreateOrder = () => {
 };
 
 export const useGetAllOrders = () => {
-  return useQuery({
+  return useQuery<PaginatedResponse<OrderDTO>>({
     queryKey: ["orders"],
     queryFn: () => orderService.getAll().then((res) => res.data),
   });
 };
 
-export const useGetOrdersByUser = (userId: string) => {
-  return useQuery({
-    queryKey: ["orders", userId],
-    queryFn: () => orderService.getByUserId(userId).then((res) => res.data),
+export const useGetOrdersByUser = (
+  userId: string,
+  params?: PaginationParams
+) => {
+  return useQuery<PaginatedResponse<OrderResponse>>({
+    queryKey: ["orders", userId, params],
+    queryFn: () =>
+      orderService.getByUserId(userId, params).then((res) => res.data),
     enabled: !!userId,
   });
 };

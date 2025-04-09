@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User } from "@/components/ui/icons";
+import { LogOut, Package, Settings, User } from "@/components/ui/icons";
 
 export default function ProfileDropdown() {
   const { isAdmin } = useAuth();
@@ -45,10 +45,27 @@ export default function ProfileDropdown() {
         </DropdownMenuItem>
 
         {/* TODO: Add admin panel */}
-        {isAdmin && (
-          <DropdownMenuItem className="dropdown-menu-item hover:bg-gray-50">
-            <Settings className="icon text-gray-600" />
-            <span>Painel Admin</span>
+        {isAdmin ? (
+          <>
+            <DropdownMenuItem className="dropdown-menu-item hover:bg-gray-50">
+              <Settings className="icon text-gray-600" />
+              <span>Painel Admin</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="dropdown-menu-item hover:bg-gray-50"
+              onClick={() => router.push("/orders")}
+            >
+              <Package className="icon text-gray-600" />
+              <span>Pedidos</span>
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <DropdownMenuItem
+            className="dropdown-menu-item hover:bg-gray-50"
+            onClick={() => router.push("/my-orders")}
+          >
+            <Package className="icon text-gray-600" />
+            <span>Meus Pedidos</span>
           </DropdownMenuItem>
         )}
 

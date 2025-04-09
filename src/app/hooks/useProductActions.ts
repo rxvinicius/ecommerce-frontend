@@ -6,10 +6,10 @@ import { AxiosError } from "axios";
 import productService from "@/api/services/productService";
 import {
   CreateProductDTO,
-  GetProductsParams,
   PaginatedProductResponse,
   Product,
 } from "@/types/product";
+import { PaginationParams } from "@/types/pagination";
 import type { ApiError } from "@/types/api";
 
 export const useCreateProduct = () => {
@@ -29,7 +29,7 @@ export const useCreateProduct = () => {
   });
 };
 
-export const useGetProducts = (params?: GetProductsParams) => {
+export const useGetProducts = (params?: PaginationParams) => {
   return useQuery<PaginatedProductResponse>({
     queryKey: ["products", params],
     queryFn: () => productService.getAll(params).then((res) => res.data),

@@ -1,3 +1,5 @@
+import { PaginationMeta } from "./pagination";
+
 export type Product = {
   id: string;
   name: string;
@@ -25,19 +27,7 @@ export type ProductFormProps = {
   product?: Product;
 };
 
-export type PaginationMeta = {
-  total: number;
-  page: number;
-  limit: number;
-  lastPage: number;
-};
-
 export type PaginatedProductResponse = {
   data: Product[];
   meta: PaginationMeta;
-};
-
-export type GetProductsParams = {
-  page?: number;
-  limit?: number;
 };

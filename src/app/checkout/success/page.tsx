@@ -30,7 +30,7 @@ export default function SuccessPage() {
         <Button
           size="lg"
           variant="outline"
-          onClick={() => router.push("/pedidos")}
+          onClick={() => router.push("/my-orders")}
         >
           Ver meus pedidos
         </Button>
