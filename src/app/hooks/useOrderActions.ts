@@ -6,7 +6,6 @@ import { AxiosError } from "axios";
 import orderService from "@/api/services/orderService";
 import { AdminOrderResponse, OrderDTO, OrderResponse } from "@/types/order";
 import { ApiError } from "@/types/api";
-import { cartStorage } from "@/utils/cartStorage";
 import { PaginationParams, PaginatedResponse } from "@/types/pagination";
 
 export const useCreateOrder = () => {
@@ -22,8 +21,6 @@ export const useCreateOrder = () => {
           query.queryKey[0] === "orders" &&
           query.queryKey.length > 1, // ["orders", userId]
       }); // Customer
-
-      cartStorage.clearCart();
     },
     onError: (err: AxiosError<ApiError>) => {
       throw new Error(

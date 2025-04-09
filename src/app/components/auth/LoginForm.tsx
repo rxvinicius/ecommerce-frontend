@@ -3,19 +3,20 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/icons";
+import { EyeIcon, EyeOff, Spinner } from "@/components/ui/icons";
 import { loginSchema, LoginFormData } from "@/lib/validations/auth.schema";
 import { useLogin } from "@/hooks/useAuthActions";
 import ErrorInfo from "./ErrorInfo";
 
-/**
- * Login form with built-in validation and error handling
- */
 export default function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePassword = () => setShowPassword((prev) => !prev);
+
   const {
     register,
     handleSubmit,
@@ -23,6 +24,7 @@ export default function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
   const { mutate: login, isPending: isLoading, isError, error } = useLogin();
 
   const onSubmit = (data: LoginFormData) => login(data);
@@ -45,15 +47,27 @@ export default function LoginForm() {
             )}
           </div>
 
-          <div className="grid gap-2">
+          <div className="grid gap-2 relative">
             <Label htmlFor="password">Senha</Label>
             <Input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="••••••"
               {...register("password")}
               disabled={isLoading}
             />
+            <button
+              type="button"
+              onClick={togglePassword}
+              className="absolute right-3 bottom-2 text-muted-foreground cursor-pointer"
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeIcon className="w-5 h-5" />
+              ) : (
+                <EyeOff className="w-5 h-5" />
+              )}
+            </button>
             {errors.password && (
               <p className="small-medium error">{errors.password.message}</p>
             )}

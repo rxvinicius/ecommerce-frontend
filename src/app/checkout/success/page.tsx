@@ -38,7 +38,7 @@ function SuccessContent() {
         <Button
           size="lg"
           variant="default"
-          onClick={() => router.push("/produtos")}
+          onClick={() => router.push("/products")}
         >
           Continuar comprando
         </Button>
