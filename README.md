@@ -75,22 +75,28 @@ cd ecommerce-frontend
 ### 2. Instale as dependências
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
+
+> ⚠️ **Nota técnica**: foi necessário utilizar a flag `--legacy-peer-deps` devido à dependência `react-credit-cards@0.8.3`, que ainda não oferece suporte ao React 19.
+> Essa abordagem **NÃO** é recomendada para produção, mas neste desafio técnico ela não causa problemas de funcionamento e foi adotada para manter a compatibilidade e o foco nas funcionalidades.
+
+> 📌 Futuramente, irei substituir essa biblioteca por uma alternativa compatível como `react-credit-cards-2`, garantindo maior aderência às boas práticas.
 
 ### 3. Configure `.env`
 
-Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
+Renomeie o arquivo `.env.example` para `.env`:
 
 ```bash
-# URL da API do backend
-NEXT_PUBLIC_API_URL=http://localhost:3001
+mv .env.example .env
 ```
 
-Ou, se preferir testar com a API hospedada:
+No arquivo .env, defina a URL da API que deseja utilizar:
 
-```bash
+```env
 NEXT_PUBLIC_API_URL=https://ecommerce-rx-vinicius.koyeb.app
+# Ou, para ambiente local:
+# NEXT_PUBLIC_API_URL=http://localhost:3001
 ```
 
 ### 4. Rode o projeto
