@@ -121,8 +121,6 @@ src/
 └── types/                 # Tipagens globais
 ```
 
-> ❗ Nota: me confundi durante a criação inicial do projeto e acabei organizando toda a estrutura dentro de `src/app`, o que foge das boas práticas comuns. Em um cenário real, eu reorganizaria as pastas conforme mostrado acima, mas como o tempo para o desafio era curto, optei por manter como estava para focar nas funcionalidades e na experiência do usuário.
-
 ## ⚠️ Observações Técnicas
 
 - Sessões e carrinho são armazenados via localStorage

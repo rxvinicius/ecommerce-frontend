@@ -1,4 +1,4 @@
-import { Banner, ProductList } from "./components/shared";
+import { Banner, ProductList } from "../components/shared";
 
 export default function Home() {
   return (

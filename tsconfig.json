@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/app/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/hooks"
+    "src/hooks"
   ],
   "exclude": ["node_modules"]
 }
