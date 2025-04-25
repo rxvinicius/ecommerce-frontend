@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/icons";
-import useAuth from "@/hooks/useAuth";
+import { UserRole } from "@/constants/user-role";
+import useProtectedRoute from "@/hooks/useProtectedRoute";
 
 type AdminOnlyProps = {
   children: React.ReactNode;
@@ -15,10 +15,9 @@ type AdminOnlyProps = {
  * and performing access control via middleware or server-side logic to avoid client-side flashes and improve security.
  */
 export default function AdminOnly({ children }: AdminOnlyProps) {
-  const router = useRouter();
-  const { isAdmin, authLoaded } = useAuth();
+  const { loading, allowed } = useProtectedRoute(UserRole.CUSTOMER);
 
-  if (!authLoaded) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
         <Spinner className="w-10 h-10 animate-spin text-primary" />
@@ -26,12 +25,7 @@ export default function AdminOnly({ children }: AdminOnlyProps) {
     );
   }
 
-  if (!isAdmin) {
-    if (typeof window !== "undefined") {
-      router.replace("/");
-    }
-    return null;
-  }
+  if (!allowed) return null;
 
   return <>{children}</>;
 }
